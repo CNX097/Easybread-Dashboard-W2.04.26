@@ -93,13 +93,63 @@
             <p>Easybread Report Engine v2.0 • Cập nhật lần cuối: <span id="last-update">...</span></p>
         </footer>
     </div>
+    <!-- Embedded Data for Offline/Local View -->
+    <script id="report-data" type="application/json">
+    {
+      "period": { "start": "2026-04-01", "end": "2026-04-19" },
+      "total_revenue": 443440257.5,
+      "branches": [
+        { "Branch": "E01 - 47 Nguyễn Tuân", "TotalRevenue": 170765150.0 },
+        { "Branch": "E11 - SmartCity S3.02", "TotalRevenue": 65777965.0 },
+        { "Branch": "E04 - Goldmark Diamond", "TotalRevenue": 64426350.0 },
+        { "Branch": "E08 - 6th Element Melody", "TotalRevenue": 31698450.0 },
+        { "Branch": "E09 - 6th Element Diamond", "TotalRevenue": 27726400.0 },
+        { "Branch": "E05 - Mipec Rubik360", "TotalRevenue": 26742150.0 },
+        { "Branch": "E06 - Terra V2", "TotalRevenue": 23018975.0 },
+        { "Branch": "E15 - Smartcity S2.05", "TotalRevenue": 16583817.5 },
+        { "Branch": "E02 - Hoàng Thành", "TotalRevenue": 12299550.0 },
+        { "Branch": "E10 - The West (Mới)", "TotalRevenue": 3643950.0 },
+        { "Branch": "E16 - Yên Nghĩa", "TotalRevenue": 757500.0 }
+      ],
+      "daily": [
+        { "Date": "2026-04-01", "Revenue": 24003850.0 },
+        { "Date": "2026-04-02", "Revenue": 26283475.0 },
+        { "Date": "2026-04-03", "Revenue": 21147225.0 },
+        { "Date": "2026-04-04", "Revenue": 23583675.0 },
+        { "Date": "2026-04-05", "Revenue": 20477175.0 },
+        { "Date": "2026-04-06", "Revenue": 19133600.0 },
+        { "Date": "2026-04-07", "Revenue": 19966477.5 },
+        { "Date": "2026-04-08", "Revenue": 20611325.0 },
+        { "Date": "2026-04-09", "Revenue": 20277000.0 },
+        { "Date": "2026-04-10", "Revenue": 21233775.0 },
+        { "Date": "2026-04-11", "Revenue": 25501150.0 },
+        { "Date": "2026-04-12", "Revenue": 22419725.0 },
+        { "Date": "2026-04-13", "Revenue": 20016540.0 },
+        { "Date": "2026-04-14", "Revenue": 24042825.0 },
+        { "Date": "2026-04-15", "Revenue": 22942950.0 },
+        { "Date": "2026-04-16", "Revenue": 24362375.0 },
+        { "Date": "2026-04-17", "Revenue": 26838490.0 },
+        { "Date": "2026-04-18", "Revenue": 26768375.0 },
+        { "Date": "2026-04-19", "Revenue": 33830250.0 }
+      ],
+      "products": [
+        { "ProductName": "Bánh Rán Vừng", "LineValue": 38422300.0 },
+        { "ProductName": "Bánh Mì Sandwich", "LineValue": 30540000.0 },
+        { "ProductName": "Bánh Su Kem", "LineValue": 17939000.0 },
+        { "ProductName": "E01.Bánh mì chuột", "LineValue": 17636000.0 },
+        { "ProductName": "Khoai Lang Mật Nướng", "LineValue": 16693950.0 }
+      ],
+      "last_update": "2026-04-20 17:35:14"
+    }
+    </script>
     <script>
         lucide.createIcons();
         const formatCurrency = (val) => new Intl.NumberFormat('vi-VN').format(Math.round(val)) + ' ₫';
         async function loadReport() {
             try {
-                const response = await fetch('specific_report.json');
-                const data = await response.json();
+                // Read from embedded script tag to bypass CORS
+                const dataRaw = document.getElementById('report-data').textContent;
+                const data = JSON.parse(dataRaw);
                 document.getElementById('total-revenue').textContent = formatCurrency(data.total_revenue);
                 document.getElementById('avg-daily').textContent = formatCurrency(data.total_revenue / data.daily.length);
                 document.getElementById('last-update').textContent = data.last_update;
@@ -108,7 +158,7 @@
                 new Chart(document.getElementById('daily-chart'), {
                     type: 'bar',
                     data: {
-                        labels: data.daily.map(d => d.Date.split('-')[2]), // Just day part
+                        labels: data.daily.map(d => d.Date.split('-')[2]),
                         datasets: [{
                             label: 'Doanh thu',
                             data: data.daily.map(d => d.Revenue),
