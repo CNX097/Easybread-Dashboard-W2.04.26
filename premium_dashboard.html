@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easybread Premium Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --accent-blue: #38bdf8;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .animate-pulse-soft {
+            animation: pulse-soft 3s infinite;
+        }
+    </style>
+</head>
+<body class="p-4 lg:p-8">
+    <div class="max-w-[1440px] mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <div class="w-8 h-8 bg-sky-500 rounded-lg flex items-center justify-center">
+                        <i data-lucide="layout-dashboard" class="text-white w-5 h-5"></i>
+                    </div>
+                    <span class="text-sm font-bold tracking-widest text-sky-400 uppercase">Executive Dashboard</span>
+                </div>
+                <h1 class="text-4xl lg:text-5xl font-extrabold text-white tracking-tight">Easybread <span class="text-sky-500">Analytics</span></h1>
+                <p class="text-slate-400 mt-2 font-medium">Báo cáo doanh thu & hiệu quả kinh doanh Nhóm hàng 04</p>
+            </div>
+            
+            <div class="flex flex-col items-end">
+                <div class="px-4 py-2 bg-slate-900/50 rounded-xl border border-white/5 flex items-center gap-3 backdrop-blur-md">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span class="text-xs font-semibold text-slate-300">Dữ liệu cập nhật: <span id="last-update" class="text-white">...</span></span>
+                </div>
+                <div class="mt-3 flex gap-2">
+                    <button onclick="location.reload()" class="p-2 hover:bg-white/5 rounded-lg transition-colors border border-transparent hover:border-white/10">
+                        <i data-lucide="refresh-cw" class="w-4 h-4 text-slate-400"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <!-- Total Revenue -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="stat-icon bg-sky-500/10 text-sky-500">
+                        <i data-lucide="badge-dollar-sign" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm font-semibold">Tổng doanh thu</p>
+                <h3 class="text-3xl font-extrabold mt-1" id="kpi-revenue">0</h3>
+                <p class="text-[10px] text-slate-500 mt-2 uppercase tracking-wider font-bold">Toàn thời gian (2025-2026)</p>
+            </div>
+
+            <!-- Total Orders -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="stat-icon bg-emerald-500/10 text-emerald-500">
+                        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm font-semibold">Tổng hóa đơn</p>
+                <h3 class="text-3xl font-extrabold mt-1" id="kpi-orders">0</h3>
+                <p class="text-[10px] text-slate-500 mt-2 uppercase tracking-wider font-bold">Số lượng giao dịch thành công</p>
+            </div>
+
+            <!-- AOV -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="stat-icon bg-amber-500/10 text-amber-500">
+                        <i data-lucide="trending-up" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm font-semibold">Giá trị TB đơn hàng</p>
+                <h3 class="text-3xl font-extrabold mt-1" id="kpi-aov">0</h3>
+                <p class="text-[10px] text-slate-500 mt-2 uppercase tracking-wider font-bold">Average Order Value (AOV)</p>
+            </div>
+
+            <!-- Growth -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="stat-icon bg-indigo-500/10 text-indigo-500">
+                        <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <p class="text-slate-400 text-sm font-semibold">Tăng trưởng tháng cuối</p>
+                <h3 class="text-3xl font-extrabold mt-1" id="kpi-growth">0%</h3>
+                <p class="text-[10px] text-slate-500 mt-2 uppercase tracking-wider font-bold">Month-over-Month (MoM)</p>
+            </div>
+        </div>
+
+        <!-- Charts Grid 1 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+            <!-- Revenue Trend -->
+            <div class="lg:col-span-2 glass-card p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h2 class="text-xl font-bold">Xu hướng doanh thu</h2>
+                        <p class="text-slate-400 text-sm">Biến động doanh thu theo từng tháng</p>
+                    </div>
+                </div>
+                <div class="h-[350px]">
+                    <canvas id="chart-revenue"></canvas>
+                </div>
+            </div>
+
+            <!-- Category Breakdown -->
+            <div class="glass-card p-8">
+                <h2 class="text-xl font-bold mb-1">Cơ cấu danh mục</h2>
+                <p class="text-slate-400 text-sm mb-8">Tỷ trọng doanh thu các nhóm sản phẩm</p>
+                <div class="h-[300px] flex items-center justify-center">
+                    <canvas id="chart-categories"></canvas>
+                </div>
+                <div id="category-legend" class="mt-6 flex flex-wrap gap-4 justify-center"></div>
+            </div>
+        </div>
+
+        <!-- Charts Grid 2 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <!-- Branch Performance -->
+            <div class="glass-card p-8">
+                <h2 class="text-xl font-bold mb-1">Hiệu quả theo Chi nhánh</h2>
+                <p class="text-slate-400 text-sm mb-8">Top 15 chi nhánh doanh thu cao nhất</p>
+                <div class="h-[400px]">
+                    <canvas id="chart-branches"></canvas>
+                </div>
+            </div>
+
+            <!-- Product Leaderboard -->
+            <div class="glass-card p-8 overflow-hidden">
+                <h2 class="text-xl font-bold mb-1">Top sản phẩm bán chạy</h2>
+                <p class="text-slate-400 text-sm mb-8">Dựa trên doanh thu tích lũy</p>
+                <div class="space-y-6 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+                    <div id="product-list" class="space-y-4">
+                        <!-- Products inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Heatmap / Timing -->
+            <div class="lg:col-span-2 glass-card p-8">
+                <h2 class="text-xl font-bold mb-1">Thời điểm bán hàng đỉnh điểm</h2>
+                <p class="text-slate-400 text-sm mb-8">Mật độ doanh thu theo Thứ & Giờ trong ngày</p>
+                <div class="h-[400px] -mx-4 overflow-x-auto custom-scrollbar">
+                    <div class="min-w-[800px] h-full p-4">
+                        <canvas id="chart-heatmap"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Share of Group Comparison -->
+            <div class="glass-card p-8">
+                <h2 class="text-xl font-bold mb-1">Hiệu suất tháng hiện tại</h2>
+                <p class="text-slate-400 text-sm mb-8">So với doanh thu TB 3 tháng trước đó</p>
+                <div id="comparison-list" class="space-y-5">
+                    <!-- Comparison items here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-20 pt-8 border-t border-white/5 text-center text-slate-500 text-sm">
+            <p>&copy; 2026 Easybread Analytics Engine • Powered by High-End BI Modules</p>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const colors = { blue: '#38bdf8', emerald: '#10b981', amber: '#f59e0b', indigo: '#6366f1', rose: '#f43f5e', slate: '#94a3b8' };
+        const formatCurrency = (val) => new Intl.NumberFormat('vi-VN').format(Math.round(val)) + ' ₫';
+
+        async function initDashboard() {
+            try {
+                const response = await fetch('analysis_data.json');
+                const data = await response.json();
+                document.getElementById('last-update').textContent = data.last_update;
+                document.getElementById('kpi-revenue').textContent = formatCurrency(data.summary.total_revenue).replace(' ₫', '');
+                document.getElementById('kpi-orders').textContent = data.summary.total_orders.toLocaleString('vi-VN');
+                document.getElementById('kpi-aov').textContent = formatCurrency(data.summary.avg_order_value).replace(' ₫', '');
+                document.getElementById('kpi-growth').textContent = data.summary.last_month_growth + '%';
+                if (data.summary.last_month_growth < 0) document.getElementById('kpi-growth').style.color = colors.rose;
+                else document.getElementById('kpi-growth').style.color = colors.emerald;
+
+                new Chart(document.getElementById('chart-revenue'), {
+                    type: 'line',
+                    data: {
+                        labels: data.timeline.map(t => t.Month),
+                        datasets: [{
+                            label: 'Doanh thu',
+                            data: data.timeline.map(t => t.Revenue),
+                            borderColor: colors.blue,
+                            borderWidth: 4,
+                            pointBackgroundColor: colors.blue,
+                            tension: 0.4,
+                            fill: true,
+                            backgroundColor: 'rgba(56, 189, 248, 0.1)'
+                        }]
+                    },
+                    options: { maintainAspectRatio: false, plugins: { legend: { display: false } },
+                        scales: { x: { ticks: { color: colors.slate } }, y: { ticks: { color: colors.slate, callback: v => v/1000000 + 'M' } } }
+                    }
+                });
+
+                new Chart(document.getElementById('chart-categories'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.atv.map(a => a.Group),
+                        datasets: [{
+                            data: data.atv.map(a => a.TotalRevenue),
+                            backgroundColor: [colors.blue, colors.emerald, colors.amber, colors.indigo, colors.rose],
+                            borderWidth: 0, cutout: '75%'
+                        }]
+                    },
+                    options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+
+                new Chart(document.getElementById('chart-branches'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.branches.map(b => b.Branch),
+                        datasets: [{ label: 'Doanh thu', data: data.branches.map(b => b.Revenue), backgroundColor: colors.emerald, borderRadius: 6 }]
+                    },
+                    options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } },
+                        scales: { x: { ticks: { color: colors.slate, callback: v => v/1000000 + 'M' } }, y: { ticks: { color: colors.slate, font: { size: 10 } } } }
+                    }
+                });
+
+                const prodList = document.getElementById('product-list');
+                const totalRev = data.summary.total_revenue;
+                data.products.forEach((p, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'w-full';
+                    div.innerHTML = `
+                        <div class="flex justify-between items-end mb-1">
+                            <span class="text-sm font-semibold text-slate-200 truncate max-w-[200px]">${i+1}. ${p.Product}</span>
+                            <span class="text-xs font-bold text-sky-400">${formatCurrency(p.Revenue)}</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-1">
+                            <div class="bg-sky-500 h-full rounded-full" style="width: ${(p.Revenue/data.products[0].Revenue)*100}%"></div>
+                        </div>
+                    `;
+                    prodList.appendChild(div);
+                });
+
+                new Chart(document.getElementById('chart-heatmap'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.heatmap.hours,
+                        datasets: data.heatmap.days.map((day, dIdx) => ({
+                            label: day,
+                            data: data.heatmap.values[dIdx],
+                            backgroundColor: (ctx) => {
+                                const alpha = Math.min(ctx.raw / 50000000, 1);
+                                return `rgba(56, 189, 248, ${alpha})`;
+                            }
+                        }))
+                    },
+                    options: { maintainAspectRatio: false, scales: { x: { ticks: { color: colors.slate } }, y: { ticks: { color: colors.slate } } } }
+                });
+
+                const compList = document.getElementById('comparison-list');
+                data.comparison.filter(c => c.Current > 0).forEach(c => {
+                    const diff = ((c.Current - c.Average) / c.Average * 100).toFixed(1);
+                    const div = document.createElement('div');
+                    div.className = 'p-3 rounded-xl bg-white/5 border border-white/5';
+                    div.innerHTML = `
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="font-bold text-slate-300 font-xs uppercase">${c.Group}</span>
+                            <span class="font-bold ${diff >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${diff >= 0 ? '+' : ''}${diff}%</span>
+                        </div>
+                    `;
+                    compList.appendChild(div);
+                });
+            } catch (e) { console.error(e); }
+        }
+        initDashboard();
+    </script>
+</body>
+</html>
