@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easybread Report: 01/04 - 19/04</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .glass-card { background: white; border-radius: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .table-row:hover { background-color: #f1f5f9; }
+        .accent-gradient { background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Báo Cáo Doanh Thu Easybread</h1>
+                <p class="text-slate-500 font-medium">Giai đoạn: <span class="text-blue-600 font-bold">01/04/2026 - 19/04/2026</span></p>
+            </div>
+            <div class="flex gap-3">
+                <div class="px-4 py-2 glass-card flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
+                    <span class="text-sm font-semibold" id="report-period">01/04 - 19/04</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="glass-card p-6 accent-gradient text-white">
+                <p class="text-white/80 text-sm font-bold uppercase tracking-wider">Tổng doanh thu hệ thống</p>
+                <h3 class="text-4xl font-extrabold mt-2" id="total-revenue">0 ₫</h3>
+                <p class="text-xs text-white/60 mt-2 font-medium">Nhóm hàng 04. Easybread (Tất cả chi nhánh)</p>
+            </div>
+            <div class="glass-card p-6 flex flex-col justify-center">
+                <p class="text-slate-400 text-sm font-bold uppercase tracking-wider">Hiệu suất trung bình ngày</p>
+                <h3 class="text-3xl font-extrabold text-slate-900 mt-2" id="avg-daily">0 ₫</h3>
+                <p class="text-xs text-slate-400 mt-2">Dựa trên 19 ngày kinh doanh</p>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="lg:col-span-2 glass-card p-6">
+                <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                    <i data-lucide="trending-up" class="w-5 h-5 text-blue-500"></i>
+                    Biến động doanh thu hàng ngày
+                </h2>
+                <div class="h-[300px]">
+                    <canvas id="daily-chart"></canvas>
+                </div>
+            </div>
+            <div class="glass-card p-6">
+                <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                    <i data-lucide="award" class="w-5 h-5 text-amber-500"></i>
+                    Top 5 Sản Phẩm
+                </h2>
+                <div id="product-list" class="space-y-4">
+                    <!-- Products -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Branch Table -->
+        <div class="glass-card overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h2 class="text-lg font-bold flex items-center gap-2">
+                    <i data-lucide="map-pin" class="w-5 h-5 text-emerald-500"></i>
+                    Chi tiết theo Chi nhánh
+                </h2>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest" id="branch-count">0 Chi nhánh</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-slate-500 text-xs font-bold uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4">STT</th>
+                            <th class="px-6 py-4">Tên Chi Nhánh</th>
+                            <th class="px-6 py-4 text-right">Doanh Thu</th>
+                            <th class="px-6 py-4 text-right">Tỷ Trọng</th>
+                        </tr>
+                    </thead>
+                    <tbody id="branch-tbody" class="divide-y divide-slate-100 text-sm">
+                        <!-- Branches -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-slate-400 text-xs pb-10">
+            <p>Easybread Report Engine v2.0 • Cập nhật lần cuối: <span id="last-update">...</span></p>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const formatCurrency = (val) => new Intl.NumberFormat('vi-VN').format(Math.round(val)) + ' ₫';
+
+        async function loadReport() {
+            try {
+                const response = await fetch('specific_report.json');
+                const data = await response.json();
+
+                document.getElementById('total-revenue').textContent = formatCurrency(data.total_revenue);
+                document.getElementById('avg-daily').textContent = formatCurrency(data.total_revenue / data.daily.length);
+                document.getElementById('last-update').textContent = data.last_update;
+                document.getElementById('branch-count').textContent = data.branches.length + ' Chi nhánh';
+
+                // Daily Chart
+                new Chart(document.getElementById('daily-chart'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.daily.map(d => d.Date.split('-')[2]), // Just day part
+                        datasets: [{
+                            label: 'Doanh thu',
+                            data: data.daily.map(d => d.Revenue),
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { callback: v => v/1000000 + 'M' } }
+                        }
+                    }
+                });
+
+                // Products
+                const prodList = document.getElementById('product-list');
+                data.products.slice(0, 5).forEach((p, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'flex flex-col gap-1';
+                    div.innerHTML = `
+                        <div class="flex justify-between text-xs font-bold">
+                            <span class="truncate max-w-[150px]">${p.ProductName}</span>
+                            <span class="text-blue-600">${formatCurrency(p.LineValue)}</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-blue-500 h-full" style="width: ${(p.LineValue/data.products[0].LineValue)*100}%"></div>
+                        </div>
+                    `;
+                    prodList.appendChild(div);
+                });
+
+                // Branches
+                const tbody = document.getElementById('branch-tbody');
+                data.branches.forEach((b, i) => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'table-row transition-colors';
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 text-slate-400 font-medium">${i+1}</td>
+                        <td class="px-6 py-4 font-bold text-slate-700">${b.Branch || 'N/A'}</td>
+                        <td class="px-6 py-4 text-right font-extrabold text-slate-900">${formatCurrency(b.TotalRevenue)}</td>
+                        <td class="px-6 py-4 text-right text-slate-400 font-semibold">${((b.TotalRevenue/data.total_revenue)*100).toFixed(1)}%</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        loadReport();
+    </script>
+</body>
+</html>
