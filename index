@@ -30,7 +30,6 @@
                 </div>
             </div>
         </header>
-
         <!-- KPI Summary -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div class="glass-card p-6 accent-gradient text-white">
@@ -44,7 +43,6 @@
                 <p class="text-xs text-slate-400 mt-2">Dựa trên 19 ngày kinh doanh</p>
             </div>
         </div>
-
         <!-- Charts Row -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             <div class="lg:col-span-2 glass-card p-6">
@@ -66,7 +64,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Branch Table -->
         <div class="glass-card overflow-hidden">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center">
@@ -92,26 +89,21 @@
                 </table>
             </div>
         </div>
-
         <footer class="mt-12 text-center text-slate-400 text-xs pb-10">
             <p>Easybread Report Engine v2.0 • Cập nhật lần cuối: <span id="last-update">...</span></p>
         </footer>
     </div>
-
     <script>
         lucide.createIcons();
         const formatCurrency = (val) => new Intl.NumberFormat('vi-VN').format(Math.round(val)) + ' ₫';
-
         async function loadReport() {
             try {
                 const response = await fetch('specific_report.json');
                 const data = await response.json();
-
                 document.getElementById('total-revenue').textContent = formatCurrency(data.total_revenue);
                 document.getElementById('avg-daily').textContent = formatCurrency(data.total_revenue / data.daily.length);
                 document.getElementById('last-update').textContent = data.last_update;
                 document.getElementById('branch-count').textContent = data.branches.length + ' Chi nhánh';
-
                 // Daily Chart
                 new Chart(document.getElementById('daily-chart'), {
                     type: 'bar',
@@ -132,7 +124,6 @@
                         }
                     }
                 });
-
                 // Products
                 const prodList = document.getElementById('product-list');
                 data.products.slice(0, 5).forEach((p, i) => {
@@ -149,7 +140,6 @@
                     `;
                     prodList.appendChild(div);
                 });
-
                 // Branches
                 const tbody = document.getElementById('branch-tbody');
                 data.branches.forEach((b, i) => {
@@ -163,7 +153,6 @@
                     `;
                     tbody.appendChild(tr);
                 });
-
             } catch (e) {
                 console.error(e);
             }
