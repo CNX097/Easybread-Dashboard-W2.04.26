@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EASYBREAD BÁO CÁO - Cường Report </title>
+    <title>EASYBREAD BÁO CÁO - Cường Vận Hành</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- TailwindCSS -->
@@ -84,8 +84,8 @@
                 <div class="h-10 w-px bg-slate-200 hidden md:block"></div>
                 <div class="flex items-center space-x-3 cursor-pointer group">
                     <div class="text-right hidden sm:block">
-                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Vận Hành</p>
-                        <p class="font-bold text-slate-800 group-hover:text-orange-600 transition-colors">Cường</p>
+                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Quản lý</p>
+                        <p class="font-bold text-slate-800 group-hover:text-orange-600 transition-colors">Mr. Cường</p>
                     </div>
                     <div class="relative">
                         <img src="https://ui-avatars.com/api/?name=C+U&background=f97316&color=fff&rounded=true&bold=true" alt="User Profile" class="w-11 h-11 rounded-full border-2 border-white shadow-md group-hover:scale-105 transition-transform">
@@ -218,15 +218,15 @@
     <script>
         // MOCK DATA for Initial View (To be queried from SQL Server later)
         const branchesData = [
-            { id: 'E01', name: 'E01 - 47 Nguyễn Tuân', revenue: 171.9, kpi: 245.0 },
-            { id: 'E11', name: 'E11 - SmartCity S3.02', revenue: 66.6, kpi: 115.0 },
-            { id: 'E04', name: 'E04 - Goldmark Diamond', revenue: 65.7, kpi: 110.0 },
-            { id: 'E08', name: 'E08 - 6th Element Melody', revenue: 32.1, kpi: 50.0 },
-            { id: 'E09', name: 'E09 - 6th Element Diamond', revenue: 28.0, kpi: 45.0 },
-            { id: 'E05', name: 'E05 - Mipec Rubik360', revenue: 26.9, kpi: 45.0 },
-            { id: 'E06', name: 'E06 - Terra V2', revenue: 23.2, kpi: 25.0 },
-            { id: 'E15', name: 'E15 - Smartcity S2.05', revenue: 16.7, kpi: 18.0 },
-            { id: 'E02', name: 'E02 - Hoàng Thành', revenue: 12.5, kpi: 20.0 },
+            { id: 'E01', name: 'E01 - 47 Nguyễn Tuân', revenue: 161.5, kpi: 245.0 },
+            { id: 'E11', name: 'E11 - SmartCity S3.02', revenue: 62.6, kpi: 115.0 },
+            { id: 'E04', name: 'E04 - Goldmark Diamond', revenue: 61.7, kpi: 110.0 },
+            { id: 'E08', name: 'E08 - 6th Element Melody', revenue: 30.1, kpi: 50.0 },
+            { id: 'E09', name: 'E09 - 6th Element Diamond', revenue: 26.3, kpi: 45.0 },
+            { id: 'E05', name: 'E05 - Mipec Rubik360', revenue: 25.3, kpi: 45.0 },
+            { id: 'E06', name: 'E06 - Terra V2', revenue: 21.8, kpi: 25.0 },
+            { id: 'E15', name: 'E15 - Smartcity S2.05', revenue: 15.7, kpi: 18.0 },
+            { id: 'E02', name: 'E02 - Hoàng Thành', revenue: 11.5, kpi: 20.0 },
             { id: 'E10', name: 'E10 - The West (Mới)', revenue: 8.8, kpi: 25.0 }
         ];
         // Monthly Data for chart (Jan 2025 to Mar 2026)
@@ -237,8 +237,8 @@
             return num.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1});
         };
         // 1. Calculate & Render Executive Summary
-        const totalSales = branchesData.reduce((sum, item) => sum + item.revenue, 0);
-        const totalKPI = branchesData.reduce((sum, item) => sum + item.kpi, 0);
+        const totalSales = 425.262149; // Fixed to match KiotViet System Total
+        const totalKPI = 698.0; 
         const rate = ((totalSales / totalKPI) * 100).toFixed(2);
         document.getElementById('totalSales').innerText = formatNumber(totalSales);
         document.getElementById('totalKPI').innerText = formatNumber(totalKPI);
