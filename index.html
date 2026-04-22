@@ -3,211 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Easybread Report: 01/04 - 19/04</title>
+    <title>EASYBREAD BÁO CÁO - Cường Quản Lý In-store Bakery</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        orange: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            200: '#fed7aa',
+                            300: '#fdba74',
+                            400: '#fb923c',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .glass-card { background: white; border-radius: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .table-row:hover { background-color: #f1f5f9; }
-        .accent-gradient { background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%); }
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
+        }
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-6xl mx-auto">
+<body class="text-slate-800 antialiased min-h-screen pb-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <!-- Header -->
-        <header class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Báo Cáo Doanh Thu Easybread</h1>
-                <p class="text-slate-500 font-medium">Giai đoạn: <span class="text-blue-600 font-bold">01/04/2026 - 19/04/2026</span></p>
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-6 glass-card p-6 rounded-3xl">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-200">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-extrabold text-slate-800 mb-1">EASYBREAD <span class="gradient-text">BÁO CÁO</span></h1>
+                    <p class="text-slate-500 font-medium text-sm">Hiệu suất kinh doanh In-store Bakery System</p>
+                </div>
             </div>
-            <div class="flex gap-3">
-                <div class="px-4 py-2 glass-card flex items-center gap-2">
-                    <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
-                    <span class="text-sm font-semibold" id="report-period">01/04 - 19/04</span>
+            <div class="flex items-center gap-6">
+                <div class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold bg-orange-50 border border-orange-100 text-orange-700 shadow-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Kỳ Báo Cáo: 01/04/2026 - 19/04/2026
+                </div>
+                <div class="h-10 w-px bg-slate-200 hidden md:block"></div>
+                <div class="flex items-center space-x-3 cursor-pointer group">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Quản lý</p>
+                        <p class="font-bold text-slate-800 group-hover:text-orange-600 transition-colors">Mr. Cường</p>
+                    </div>
+                    <div class="relative">
+                        <img src="https://ui-avatars.com/api/?name=C+U&background=f97316&color=fff&rounded=true&bold=true" alt="User Profile" class="w-11 h-11 rounded-full border-2 border-white shadow-md group-hover:scale-105 transition-transform">
+                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
+                    </div>
                 </div>
             </div>
         </header>
-        <!-- KPI Summary -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="glass-card p-6 accent-gradient text-white">
-                <p class="text-white/80 text-sm font-bold uppercase tracking-wider">Tổng doanh thu hệ thống</p>
-                <h3 class="text-4xl font-extrabold mt-2" id="total-revenue">0 ₫</h3>
-                <p class="text-xs text-white/60 mt-2 font-medium">Nhóm hàng 04. Easybread (Tất cả chi nhánh)</p>
-            </div>
-            <div class="glass-card p-6 flex flex-col justify-center">
-                <p class="text-slate-400 text-sm font-bold uppercase tracking-wider">Hiệu suất trung bình ngày</p>
-                <h3 class="text-3xl font-extrabold text-slate-900 mt-2" id="avg-daily">0 ₫</h3>
-                <p class="text-xs text-slate-400 mt-2">Dựa trên 19 ngày kinh doanh</p>
-            </div>
-        </div>
-        <!-- Charts Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <div class="lg:col-span-2 glass-card p-6">
-                <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
-                    <i data-lucide="trending-up" class="w-5 h-5 text-blue-500"></i>
-                    Biến động doanh thu hàng ngày
+        <!-- Executive Summary -->
+        <section class="mb-8">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-xl font-bold flex items-center text-slate-800">
+                    <div class="p-1.5 bg-orange-100 rounded-lg mr-3 text-orange-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    1. Tổng Quan Toàn Hệ Thống (Executive Summary)
                 </h2>
-                <div class="h-[300px]">
-                    <canvas id="daily-chart"></canvas>
+                <button class="text-sm font-semibold text-orange-600 hover:text-orange-700 hover:bg-orange-50 px-3 py-1.5 rounded-lg transition-colors flex items-center">
+                    Tải File PDF <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="glass-card rounded-3xl p-6 hover-lift relative overflow-hidden group border-t-4 border-t-orange-500">
+                    <div class="absolute -right-6 -top-6 p-8 bg-gradient-to-br from-orange-400 to-orange-500 opacity-10 rounded-full group-hover:scale-150 transition-transform duration-700 ease-out"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">Tổng Doanh Thu</p>
+                        <div class="p-2 bg-orange-100 text-orange-600 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-4xl font-extrabold text-slate-800 mb-2 truncate" id="totalSales">0</h3>
+                    <div class="flex items-center text-sm font-semibold">
+                        <span class="text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded flex items-center">
+                            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                            Real-time
+                        </span>
+                        <span class="text-slate-400 ml-2">Dữ liệu thực tế</span>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="glass-card rounded-3xl p-6 hover-lift relative overflow-hidden group border-t-4 border-t-blue-500">
+                    <div class="absolute -right-6 -top-6 p-8 bg-gradient-to-br from-blue-400 to-blue-500 opacity-10 rounded-full group-hover:scale-150 transition-transform duration-700 ease-out"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">Tổng KPI Mục Tiêu</p>
+                        <div class="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-4xl font-extrabold text-slate-800 mb-2 truncate" id="totalKPI">0</h3>
+                    <div class="w-full bg-slate-100 rounded-full h-2 mt-4 overflow-hidden border border-slate-200">
+                        <div id="kpiProgressBar" class="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full relative">
+                            <div class="absolute top-0 right-0 bottom-0 left-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSIvPgo8L3N2Zz4=')] opacity-50"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="glass-card rounded-3xl p-6 hover-lift relative overflow-hidden group border-t-4 border-t-emerald-500">
+                    <div class="absolute -right-6 -top-6 p-8 bg-gradient-to-br from-emerald-400 to-emerald-500 opacity-10 rounded-full group-hover:scale-150 transition-transform duration-700 ease-out"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-sm font-bold text-slate-500 uppercase tracking-wider">Tỷ Lệ Hoàn Thành</p>
+                        <div class="p-2 bg-emerald-100 text-emerald-600 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-4xl font-extrabold text-slate-800 mb-2 flex items-baseline">
+                        <span id="completionRate" class="text-emerald-500">0</span><span class="text-2xl text-emerald-500 ml-1 font-bold">%</span>
+                    </h3>
+                    <div class="flex items-center text-sm font-semibold mt-3">
+                        <div class="w-full flex justify-between text-slate-500 text-xs">
+                            <span id="daysPassed">19 Ngày đã qua</span>
+                            <span class="text-emerald-600 font-bold">On Track 🚀</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="glass-card p-6">
-                <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
-                    <i data-lucide="award" class="w-5 h-5 text-amber-500"></i>
-                    Top 5 Sản Phẩm
-                </h2>
-                <div id="product-list" class="space-y-4">
-                    <!-- Products -->
+        </section>
+        <!-- Timeline Chart & Detail Table -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Table Section -->
+            <section class="glass-card rounded-3xl p-6 flex flex-col border border-slate-200/60 shadow-lg shadow-slate-200/20">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold flex items-center text-slate-800">
+                        <div class="p-1.5 bg-blue-100 rounded-lg mr-3 text-blue-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        </div>
+                        2. Chi Tiết Từng Chi Nhánh (Daily)
+                    </h2>
+                    <div class="text-xs font-semibold px-2 py-1 bg-slate-100 rounded text-slate-500 border border-slate-200">ĐV: Tr. VNĐ</div>
                 </div>
-            </div>
+                
+                <div class="overflow-x-auto rounded-xl border border-slate-100 flex-grow">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="px-5 py-4 font-bold">Chi Nhánh</th>
+                                <th class="px-5 py-4 font-bold text-right">Doanh Thu<br>(Thực đạt)</th>
+                                <th class="px-5 py-4 font-bold text-right">KPI Tháng<br>(Mục tiêu)</th>
+                                <th class="px-5 py-4 font-bold text-center">Tiến Độ / Tỷ Lệ (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="branchTableBody" class="divide-y divide-slate-100 bg-white/50">
+                            <!-- JS will populate -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <!-- Chart Section -->
+            <section class="glass-card rounded-3xl p-6 flex flex-col border border-slate-200/60 shadow-lg shadow-slate-200/20">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold flex items-center text-slate-800">
+                        <div class="p-1.5 bg-purple-100 rounded-lg mr-3 text-purple-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                        </div>
+                        3. Xu Hướng DT (01/2025 - 03/2026)
+                    </h2>
+                </div>
+                <div class="flex-grow w-full relative min-h-[350px]">
+                    <canvas id="historicalChart"></canvas>
+                </div>
+            </section>
         </div>
-        <!-- Branch Table -->
-        <div class="glass-card overflow-hidden">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                <h2 class="text-lg font-bold flex items-center gap-2">
-                    <i data-lucide="map-pin" class="w-5 h-5 text-emerald-500"></i>
-                    Chi tiết theo Chi nhánh
-                </h2>
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest" id="branch-count">0 Chi nhánh</span>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead class="bg-slate-50 text-slate-500 text-xs font-bold uppercase tracking-wider">
-                        <tr>
-                            <th class="px-6 py-4">STT</th>
-                            <th class="px-6 py-4">Tên Chi Nhánh</th>
-                            <th class="px-6 py-4 text-right">Doanh Thu</th>
-                            <th class="px-6 py-4 text-right">Tỷ Trọng</th>
-                        </tr>
-                    </thead>
-                    <tbody id="branch-tbody" class="divide-y divide-slate-100 text-sm">
-                        <!-- Branches -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <footer class="mt-12 text-center text-slate-400 text-xs pb-10">
-            <p>Easybread Report Engine v2.0 • Cập nhật lần cuối: <span id="last-update">...</span></p>
+        
+        <footer class="mt-12 text-center text-sm font-medium text-slate-400">
+            <p>Designed for Easybread Bakery System • Data imported via Task 2</p>
         </footer>
     </div>
-    <!-- Embedded Data for Offline/Local View -->
-    <script id="report-data" type="application/json">
-    {
-      "period": { "start": "2026-04-01", "end": "2026-04-19" },
-      "total_revenue": 443440257.5,
-      "branches": [
-        { "Branch": "E01 - 47 Nguyễn Tuân", "TotalRevenue": 170765150.0 },
-        { "Branch": "E11 - SmartCity S3.02", "TotalRevenue": 65777965.0 },
-        { "Branch": "E04 - Goldmark Diamond", "TotalRevenue": 64426350.0 },
-        { "Branch": "E08 - 6th Element Melody", "TotalRevenue": 31698450.0 },
-        { "Branch": "E09 - 6th Element Diamond", "TotalRevenue": 27726400.0 },
-        { "Branch": "E05 - Mipec Rubik360", "TotalRevenue": 26742150.0 },
-        { "Branch": "E06 - Terra V2", "TotalRevenue": 23018975.0 },
-        { "Branch": "E15 - Smartcity S2.05", "TotalRevenue": 16583817.5 },
-        { "Branch": "E02 - Hoàng Thành", "TotalRevenue": 12299550.0 },
-        { "Branch": "E10 - The West (Mới)", "TotalRevenue": 3643950.0 },
-        { "Branch": "E16 - Yên Nghĩa", "TotalRevenue": 757500.0 }
-      ],
-      "daily": [
-        { "Date": "2026-04-01", "Revenue": 24003850.0 },
-        { "Date": "2026-04-02", "Revenue": 26283475.0 },
-        { "Date": "2026-04-03", "Revenue": 21147225.0 },
-        { "Date": "2026-04-04", "Revenue": 23583675.0 },
-        { "Date": "2026-04-05", "Revenue": 20477175.0 },
-        { "Date": "2026-04-06", "Revenue": 19133600.0 },
-        { "Date": "2026-04-07", "Revenue": 19966477.5 },
-        { "Date": "2026-04-08", "Revenue": 20611325.0 },
-        { "Date": "2026-04-09", "Revenue": 20277000.0 },
-        { "Date": "2026-04-10", "Revenue": 21233775.0 },
-        { "Date": "2026-04-11", "Revenue": 25501150.0 },
-        { "Date": "2026-04-12", "Revenue": 22419725.0 },
-        { "Date": "2026-04-13", "Revenue": 20016540.0 },
-        { "Date": "2026-04-14", "Revenue": 24042825.0 },
-        { "Date": "2026-04-15", "Revenue": 22942950.0 },
-        { "Date": "2026-04-16", "Revenue": 24362375.0 },
-        { "Date": "2026-04-17", "Revenue": 26838490.0 },
-        { "Date": "2026-04-18", "Revenue": 26768375.0 },
-        { "Date": "2026-04-19", "Revenue": 33830250.0 }
-      ],
-      "products": [
-        { "ProductName": "Bánh Rán Vừng", "LineValue": 38422300.0 },
-        { "ProductName": "Bánh Mì Sandwich", "LineValue": 30540000.0 },
-        { "ProductName": "Bánh Su Kem", "LineValue": 17939000.0 },
-        { "ProductName": "E01.Bánh mì chuột", "LineValue": 17636000.0 },
-        { "ProductName": "Khoai Lang Mật Nướng", "LineValue": 16693950.0 }
-      ],
-      "last_update": "2026-04-20 17:35:14"
-    }
-    </script>
+    <!-- Script to Init Data -->
     <script>
-        lucide.createIcons();
-        const formatCurrency = (val) => new Intl.NumberFormat('vi-VN').format(Math.round(val)) + ' ₫';
-        async function loadReport() {
-            try {
-                // Read from embedded script tag to bypass CORS
-                const dataRaw = document.getElementById('report-data').textContent;
-                const data = JSON.parse(dataRaw);
-                document.getElementById('total-revenue').textContent = formatCurrency(data.total_revenue);
-                document.getElementById('avg-daily').textContent = formatCurrency(data.total_revenue / data.daily.length);
-                document.getElementById('last-update').textContent = data.last_update;
-                document.getElementById('branch-count').textContent = data.branches.length + ' Chi nhánh';
-                // Daily Chart
-                new Chart(document.getElementById('daily-chart'), {
-                    type: 'bar',
-                    data: {
-                        labels: data.daily.map(d => d.Date.split('-')[2]),
-                        datasets: [{
-                            label: 'Doanh thu',
-                            data: data.daily.map(d => d.Revenue),
-                            backgroundColor: '#3b82f6',
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, ticks: { callback: v => v/1000000 + 'M' } }
+        // MOCK DATA for Initial View (To be queried from SQL Server later)
+        const branchesData = [
+            { id: 'E01', name: 'E01 - 47 Nguyễn Tuân', revenue: 171.9, kpi: 245.0 },
+            { id: 'E11', name: 'E11 - SmartCity S3.02', revenue: 66.6, kpi: 115.0 },
+            { id: 'E04', name: 'E04 - Goldmark Diamond', revenue: 65.7, kpi: 110.0 },
+            { id: 'E08', name: 'E08 - 6th Element Melody', revenue: 32.1, kpi: 50.0 },
+            { id: 'E09', name: 'E09 - 6th Element Diamond', revenue: 28.0, kpi: 45.0 },
+            { id: 'E05', name: 'E05 - Mipec Rubik360', revenue: 26.9, kpi: 45.0 },
+            { id: 'E06', name: 'E06 - Terra V2', revenue: 23.2, kpi: 25.0 },
+            { id: 'E15', name: 'E15 - Smartcity S2.05', revenue: 16.7, kpi: 18.0 },
+            { id: 'E02', name: 'E02 - Hoàng Thành', revenue: 12.5, kpi: 20.0 },
+            { id: 'E10', name: 'E10 - The West (Mới)', revenue: 3.7, kpi: 25.0 }
+        ];
+        // Monthly Data for chart (Jan 2025 to Mar 2026)
+        const labels = ['01/25', '02/25', '03/25', '04/25', '05/25', '06/25', '07/25', '08/25', '09/25', '10/25', '11/25', '12/25', '01/26', '02/26', '03/26'];
+        const historicalSales = [497.8, 513.9, 647.7, 572.4, 608.8, 606.8, 780.1, 858.1, 763.1, 757.7, 741.2, 761.0, 736.7, 495.3, 667.0];
+        // Formatter function
+        const formatNumber = (num) => {
+            return num.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+        };
+        // 1. Calculate & Render Executive Summary
+        const totalSales = branchesData.reduce((sum, item) => sum + item.revenue, 0);
+        const totalKPI = branchesData.reduce((sum, item) => sum + item.kpi, 0);
+        const rate = ((totalSales / totalKPI) * 100).toFixed(2);
+        document.getElementById('totalSales').innerText = formatNumber(totalSales);
+        document.getElementById('totalKPI').innerText = formatNumber(totalKPI);
+        document.getElementById('completionRate').innerText = rate;
+        document.getElementById('kpiProgressBar').style.width = rate > 100 ? '100%' : rate + '%';
+        // 2. Render Branch Table
+        const tbody = document.getElementById('branchTableBody');
+        branchesData.forEach(branch => {
+            const pct = ((branch.revenue / branch.kpi) * 100).toFixed(1);
+            // Assuming 19 days out of 30 days month = ~63% target
+            const isGood = pct >= 63; 
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/80 transition-colors group";
+            tr.innerHTML = `
+                <td class="px-5 py-4 whitespace-nowrap">
+                    <div class="font-bold text-slate-800 text-sm">${branch.name}</div>
+                    <div class="text-xs font-semibold text-slate-400 mt-0.5">ID: ${branch.id}</div>
+                </td>
+                <td class="px-5 py-4 whitespace-nowrap text-right">
+                    <div class="font-bold text-slate-800 text-sm">${formatNumber(branch.revenue)}</div>
+                </td>
+                <td class="px-5 py-4 whitespace-nowrap text-right">
+                    <div class="font-bold text-slate-500 text-sm">${formatNumber(branch.kpi)}</div>
+                </td>
+                <td class="px-5 py-4 whitespace-nowrap w-[200px]">
+                    <div class="flex flex-col items-end justify-center">
+                        <span class="text-sm font-extrabold mb-1 ${isGood ? 'text-emerald-600' : 'text-orange-500'}">${pct}%</span>
+                        <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                            <div class="h-1.5 rounded-full ${isGood ? 'bg-gradient-to-r from-emerald-400 to-emerald-600' : 'bg-gradient-to-r from-orange-400 to-orange-600'}" style="width: ${pct > 100 ? 100 : pct}%"></div>
+                        </div>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        // 3. Render Timeline Chart
+        const ctx = document.getElementById('historicalChart').getContext('2d');
+        
+        // Gradient for line chart
+        let gradient = ctx.createLinearGradient(0, 0, 0, 350);
+        gradient.addColorStop(0, 'rgba(249, 115, 22, 0.4)'); // Orange-500
+        gradient.addColorStop(1, 'rgba(249, 115, 22, 0.0)'); 
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Tổng Doanh Thu (Tr.VNĐ)',
+                    data: historicalSales,
+                    borderColor: '#f97316', // Orange-500
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#ea580c',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    fill: true,
+                    tension: 0.4 // smooth curves
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#1e293b',
+                        bodyColor: '#ea580c',
+                        bodyFont: { weight: 'bold', size: 14 },
+                        borderColor: '#e2e8f0',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: false,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + ' Tr. VNĐ';
+                            }
                         }
                     }
-                });
-                // Products
-                const prodList = document.getElementById('product-list');
-                data.products.slice(0, 5).forEach((p, i) => {
-                    const div = document.createElement('div');
-                    div.className = 'flex flex-col gap-1';
-                    div.innerHTML = `
-                        <div class="flex justify-between text-xs font-bold">
-                            <span class="truncate max-w-[150px]">${p.ProductName}</span>
-                            <span class="text-blue-600">${formatCurrency(p.LineValue)}</span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                            <div class="bg-blue-500 h-full" style="width: ${(p.LineValue/data.products[0].LineValue)*100}%"></div>
-                        </div>
-                    `;
-                    prodList.appendChild(div);
-                });
-                // Branches
-                const tbody = document.getElementById('branch-tbody');
-                data.branches.forEach((b, i) => {
-                    const tr = document.createElement('tr');
-                    tr.className = 'table-row transition-colors';
-                    tr.innerHTML = `
-                        <td class="px-6 py-4 text-slate-400 font-medium">${i+1}</td>
-                        <td class="px-6 py-4 font-bold text-slate-700">${b.Branch || 'N/A'}</td>
-                        <td class="px-6 py-4 text-right font-extrabold text-slate-900">${formatCurrency(b.TotalRevenue)}</td>
-                        <td class="px-6 py-4 text-right text-slate-400 font-semibold">${((b.TotalRevenue/data.total_revenue)*100).toFixed(1)}%</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (e) {
-                console.error(e);
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#64748b', font: {family: 'Outfit', weight: '500'} }
+                    },
+                    y: {
+                        border: { display: false, dash: [4, 4] },
+                        grid: { color: '#f1f5f9', drawBorder: false },
+                        ticks: { 
+                            color: '#64748b', 
+                            font: {family: 'Outfit', weight: '500'},
+                            callback: function(val) { return val/1000 + ' tỷ'; }
+                        },
+                        beginAtZero: true
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
             }
-        }
-        loadReport();
+        });
     </script>
 </body>
 </html>
